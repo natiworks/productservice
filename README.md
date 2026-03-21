@@ -1,5 +1,5 @@
 # ProductService
-
+![CI](https://github.com/natiworks/Product-Service/actions/workflows/ci.yml/badge.svg)
 A RESTful product microservice built with Spring Boot.
 
 ## Run
