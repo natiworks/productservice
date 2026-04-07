@@ -10,16 +10,17 @@ import com.ctbe.Natnaelnigatu.repository.ProductRepository;
 @SpringBootApplication
 public class ProductServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProductServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
 
-	@Bean
-	CommandLineRunner initDatabase(ProductRepository repository) {
-		return args -> {
-			repository.save(new Product("Laptop", 1200));
-			repository.save(new Product("Monitor", 300));
-			repository.save(new Product("Keyboard", 50));
-		};
-	}
+    @Bean
+    CommandLineRunner initDatabase(ProductRepository repository) {
+        return args -> {
+            // fixed: 4-arg constructor (name, price, stockQty, category)
+            repository.save(new Product("Laptop",   1200.00, 15, "Electronics"));
+            repository.save(new Product("Monitor",   300.00,  8, "Electronics"));
+            repository.save(new Product("Keyboard",   50.00, 30, "Peripherals"));
+        };
+    }
 }
