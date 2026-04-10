@@ -1,0 +1,131 @@
+{
+  "info": {
+    "_postman_id": "c2cc22a7-ddf9-4502-a1e6-9fd20dd02e0e",
+    "name": "product-service-lab2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52996855",
+    "_collection_link": "https://go.postman.co/collection/52996855-c2cc22a7-ddf9-4502-a1e6-9fd20dd02e0e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get All Products",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By ID(invaild)",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By ID(vaild id)",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Laptop\",\r\n  \"price\": 1200.0,\r\n  \"stockQty\": 5,\r\n  \"category\": \"Electronics\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Validation Error (Blank Name)",
+      "request": {
+        "method": "POST",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Update Product",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/products/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Product",
+      "request": {
+        "method": "DELETE",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Product (Non-existent)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/products/9999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "9999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
