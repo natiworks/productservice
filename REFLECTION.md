@@ -1,7 +1,7 @@
 # Reflection — Lab 1: Hello Enterprise World with Spring Boot
 
 **Course:** Enterprise Application Development  
-**University:** Addis Ababa University — CTBE  
+**University:** Addis Ababa University — CTBE
 
 ---
 
@@ -59,3 +59,78 @@ When `create-drop` is used, the database tables are created every time the appli
 When `update` is used, the database schema is adjusted based on the entity classes, but existing data is kept. This is useful when we do not want to lose our data between restarts.
 
 In real production systems, developers usually manage database changes using dedicated tools like Flyway or Liquibase instead of relying on Hibernate's ddl-auto setting, because those tools are safer and more controlled.
+# Reflection — Lab 2
+---
+## Question 1
+**Why should the ProductRequest DTO carry the @Valid annotations instead of the Product entity itself?**
+
+The `ProductRequest` DTO holds the data that the client sends to the API, so it makes sense to check and validate that data right there before anything else happens.
+
+The `Product` entity is mainly for saving data to the database. If we also put validation rules inside the entity, it would have two jobs at once — database mapping and input validation — which makes it harder to manage.
+
+There is also a safety reason. The entity has fields like `id` that the database generates automatically. We do not want clients to be able to send or change those values. By using a DTO that only includes the fields the client is allowed to provide, we have better control over what comes into the system.
+
+---
+
+## Question 2
+**What is the purpose of the Location header returned on a POST 201 Created response, and which HTTP specification mandates it?**
+
+When a client creates a new resource using a POST request, the server responds with **201 Created**. Along with that response, the server also sends a **Location header** that contains the URL where the newly created resource can be found.
+
+For example, it might look like:  
+`http://localhost:8080/api/v1/products/4`
+
+This is helpful because the client immediately knows where to find or access the new resource without having to search for it.
+
+This behavior is described in the HTTP standard **RFC 9110**. In our controller, we used **ServletUriComponentsBuilder** to build that URL automatically by taking the current request URL and adding the new resource id to it.
+
+---
+
+## Question 3
+**Explain the difference between @ControllerAdvice and @ExceptionHandler. When would you use each?**
+
+`@ExceptionHandler` is an annotation we put on a method to handle a specific type of exception. When that exception is thrown, Spring automatically calls that method to deal with it.
+
+The problem is that by default it only works inside the controller where it is written. So if the same error can happen in multiple controllers, we would have to copy the same handler everywhere.
+
+That is where `@ControllerAdvice` helps. When we put this on a separate class, all the `@ExceptionHandler` methods inside it will work across the entire application — not just one controller.
+
+So in short: use `@ExceptionHandler` alone for a single controller, and use `@ControllerAdvice` when you want one place to handle errors for the whole API.
+
+---
+
+## Question 4
+**In your MockMvc tests you used @Transactional on the test class. What would happen to the database state between tests if you removed this annotation?**
+
+If we remove `@Transactional`, any data that a test saves to the database will stay there after the test finishes.
+
+This means the next test will see data left behind from the previous one. As more tests run, the database fills up with leftover data. This can cause tests to fail or give wrong results just because of data from earlier tests, not because of any real bug.
+
+When `@Transactional` is used on the test class, each test runs inside a transaction that is automatically rolled back when the test ends. So the database goes back to how it was before, and every test starts fresh and clean. This makes tests much more reliable.
+
+---
+
+## Question 5
+**What does RFC 9457 define, and why does following it produce better APIs than returning a generic error message?**
+
+**RFC 9457** is a standard that defines a format called **Problem Details** for sending error responses in HTTP APIs.
+
+Instead of returning something vague like `{ "error": "something went wrong" }`, the response includes useful structured fields such as:
+
+- `type` — the kind of error that happened
+- `title` — a short description of the problem
+- `status` — the HTTP status code
+- `detail` — a clear explanation of what specifically went wrong
+
+This is better for everyone involved. Clients can understand and handle different errors properly. Developers get clear information when debugging. It removes the confusion that comes with generic messages and makes the API much easier to work with.
+
+---
+
+## Question 6
+**What is the difference between an integration test (MockMvc) and a unit test (Mockito)? When is each approach preferable?**
+
+A **unit test** tests one class on its own. We use tools like **Mockito** to replace real dependencies with fake ones so we can focus only on the logic of that one class. Unit tests run very fast because they do not need a database or a server.
+
+An **integration test** checks how different parts of the application work together. With **MockMvc**, the full Spring application context is loaded including the controller, service, repository, and database. A fake HTTP request is sent and goes through the entire system just like a real one would.
+
+Unit tests are best when you want to quickly test a small piece of logic in isolation. Integration tests are better when you want to make sure the whole system works correctly end to end, from the API request all the way to the database.
